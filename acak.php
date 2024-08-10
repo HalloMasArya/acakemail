@@ -27,6 +27,7 @@ function save_to_file($combinations, $filename) {
         fwrite($file, $combo . "\n");
     }
     fclose($file);
+    return realpath($filename); // Mengembalikan path lengkap dari file yang disimpan
 }
 
 if (php_sapi_name() == "cli") {
@@ -36,16 +37,18 @@ if (php_sapi_name() == "cli") {
 
     $combinations = generate_combinations($word);
     $filename = $word . "_combinations.txt";
-    save_to_file($combinations, $filename);
+    $filePath = save_to_file($combinations, $filename);
     echo "Generated " . count($combinations) . " combinations and saved to " . $filename . "\n";
+    echo "File disimpan di: " . $filePath . "\n";
 } else {
     // Eksekusi via Web (browser)
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $word = $_POST['word'];
         $combinations = generate_combinations($word);
         $filename = $word . "_combinations.txt";
-        save_to_file($combinations, $filename);
-        echo "Generated " . count($combinations) . " combinations and saved to " . $filename;
+        $filePath = save_to_file($combinations, $filename);
+        echo "Generated " . count($combinations) . " combinations and saved to " . $filename . "<br>";
+        echo "File disimpan di: " . $filePath;
     }
 }
 
